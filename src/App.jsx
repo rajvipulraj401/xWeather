@@ -1,48 +1,3 @@
-// import React, { useState } from "react";
-// import "./App.css";
-
-// const App = () => {
-//   const [userVal, setUserVal] = useState("");
-//   const [passVal, setPassVal] = useState("");
-//   return (
-//     <>
-//       {/* <div>App</div> */}
-//       <form action="submit" className="form-conatiner">
-//         <div>
-//           <label htmlFor="Username">Username</label>
-//           <input
-//             type="text"
-//             placeholder="username"
-//             required
-//             value={userVal}
-//             onChange={(e) => setUserVal(e.target.value)}
-//           />
-//         </div>
-
-//         <div>
-//           <label htmlFor="Password">Password</label>
-//           <input
-//             type="password"
-//             placeholder="password"
-//             required
-//             value={passVal}
-//             onChange={(e) => setPassVal(e.target.value)}
-//           />
-//         </div>
-
-//         <div>
-//           <button type="submit">submit</button>
-//         </div>
-//       </form>
-
-//       {userVal == "user" && passVal == "password" && <p>Welcome ,user!</p>}
-//     </>
-//   );
-// };
-
-// export default App;
-
-// ------------------v2
 import React, { useState } from "react";
 import "./App.css";
 
@@ -58,6 +13,9 @@ const App = () => {
     setWeatherData(null); // clear old data
 
     try {
+      // 🔸 Add a small delay so "Loading data…" remains in DOM briefly
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
       const response = await fetch(
         `https://api.weatherapi.com/v1/current.json?key=3d962750a69347e6a2a130843250105&q=${city}`
       );
