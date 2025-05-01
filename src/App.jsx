@@ -13,7 +13,7 @@ const App = () => {
     setWeatherData(null); // clear old data
 
     try {
-      // 🔸 Add a small delay so "Loading data…" remains in DOM briefly
+      // Optional delay to ensure "Loading data..." appears
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       const response = await fetch(
@@ -43,7 +43,7 @@ const App = () => {
       />
       <button onClick={fetchWeather}>Search</button>
 
-      {loading && <p>Loading data…</p>}
+      {loading && <p>Loading data...</p>}
 
       {weatherData && (
         <div className="weather-cards">
