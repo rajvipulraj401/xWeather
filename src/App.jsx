@@ -7,8 +7,9 @@ import { useEffect } from "react";
 const App = () => {
   const [city, setCity] = useState("");
   const [submittedCity, setSubmittedCity] = useState("");
-  const [cityData, setCityData] = useState();
+  const [cityData, setCityData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   // Step 1: - so whenever we get new SubmittedCity we will call the with that city
   useEffect(() => {
@@ -17,6 +18,8 @@ const App = () => {
     // step 1:-- First return when the submittedCity is empty (HANDLING the mount cases)
     //  submittedCity == ""
     if (submittedCity == "") return;
+    setError(null);
+    // clear the error again in new call
 
     // step 1: - start the loading state
     setLoading(true);
@@ -37,6 +40,7 @@ const App = () => {
         // alert("Data got");
       } catch (err) {
         console.error(`This is error:- ${err}`);
+        setError("Failed to fetch weather data"); // Store error message
         alert("Failed to fetch weather data");
       } finally {
         setLoading(false);
@@ -73,32 +77,54 @@ const App = () => {
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
-          <button type="submit">Search</button>
+          {/* <button type="submit">Search</button> */}
+          <button type="submit" disabled={loading}>
+            {/* {loading ? "Loading..." : "Search"} */}
+            {/* {loading ? (
+              <div className="spinner"></div> // Show spinner while loading
+            ) : (
+              "Search"
+            )} */}
+
+            {loading ? (
+              <div
+                style={{ display: "flex", gap: "10px", alignItems: "center" }}
+              >
+                Loading <div className="spinner"></div>
+              </div>
+            ) : (
+              "Search"
+            )}
+          </button>
         </form>
 
         {/* //Step2 :-- show all the city card from the cityCard state */}
 
         {loading && <p>Loading data...</p>}
-        <div className="weather-cards">
-          <div className="weather-card">
-            <h4>Temperature</h4>
-            <h5>{`${cityData?.current?.temp_c} c`}</h5>
-            {/* use optional chaining to see if the data of object 
+        {error && <p className="error-message">{error}</p>}
+
+        {cityData && (
+          <div className="weather-cards">
+            <div className="weather-card">
+              <h4>Temperature</h4>
+              <h5>{`${cityData?.current?.temp_c}°C`}</h5>
+              {/* use optional chaining to see if the data of object 
             exists or not */}
+            </div>
+            <div className="weather-card">
+              <h4>Humidity</h4>
+              <h5>{cityData?.current?.humidity}%</h5>
+            </div>
+            <div className="weather-card">
+              <h4>Condition</h4>
+              <h5>{cityData?.current?.condition?.text}</h5>
+            </div>
+            <div className="weather-card">
+              <h4>Wind Speed</h4>
+              <h5>{cityData?.current?.wind_kph} km/h</h5>
+            </div>
           </div>
-          <div className="weather-card">
-            <h4>Humidity</h4>
-            <h5>{`${cityData?.current?.humidity}`}</h5>
-          </div>
-          <div className="weather-card">
-            <h4>Condition</h4>
-            <h5>{`${cityData?.current?.condition?.text}`}</h5>
-          </div>
-          <div className="weather-card">
-            <h4>Wind Speed</h4>
-            <h5>{`${cityData?.current?.wind_kph} k/h`}</h5>
-          </div>
-        </div>
+        )}
       </div>
     </>
   );
